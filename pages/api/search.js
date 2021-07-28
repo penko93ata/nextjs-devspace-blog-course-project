@@ -5,7 +5,7 @@ import matter from 'gray-matter';
 export default (req, res) => {
   let posts;
 
-  if (process.env.NODE_DEV === 'production') {
+  if (process.env.NODE_ENV === 'production') {
     // Fetch from cache
     posts = require('../../cache/data').posts;
   } else {
@@ -22,17 +22,17 @@ export default (req, res) => {
       const { data: frontmatter } = matter(markdownWithMeta);
 
       return {
-        frontmatter,
         slug,
+        frontmatter,
       };
     });
   }
 
   const results = posts.filter(
     ({ frontmatter: { title, excerpt, category } }) =>
-      title.toLowerCase().indexOf(req.query.q) !== -1 ||
-      excerpt.toLowerCase().indexOf(req.query.q) !== -1 ||
-      category.toLowerCase().indexOf(req.query.q) !== -1
+      title.toLowerCase().indexOf(req.query.q) != -1 ||
+      excerpt.toLowerCase().indexOf(req.query.q) != -1 ||
+      category.toLowerCase().indexOf(req.query.q) != -1
   );
 
   res.status(200).json(JSON.stringify({ results }));
